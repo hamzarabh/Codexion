@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:38:14 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 04:08:20 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 10:10:08 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ static void init_hlper(coder_t **coders, dongle **dongles, arg_t *args)
         dongles[i]->active = 1;
         dongles[i]->queue = malloc(sizeof(Queue));
         dongles[i]->queue->count = 0;
-        dongles[i]->queue->front = 0;
-        dongles[i]->queue->rear = 0;
         dongles[i]->queue->size = 2;
         dongles[i]->queue->q = malloc(sizeof(coder_t *) * 2);
         coders[i]->args = args;
@@ -45,7 +43,6 @@ static void init_hlper(coder_t **coders, dongle **dongles, arg_t *args)
 void init(coder_t **coders, dongle **dongles, arg_t *args)
 {
     int i;
-    pthread_mutex_t *lock_dong;
 
     args->stop = malloc(sizeof(int));
     args->print_lock = malloc(sizeof(pthread_mutex_t));

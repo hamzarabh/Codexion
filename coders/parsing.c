@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:38:24 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 03:38:25 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 10:10:25 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,15 @@ void helper(arg_t *argument,int index, int num)
 void *check_scheduler(arg_t *argument, char *scheduler)
 {
     if (strcmp(scheduler,"fifo") == 0)
+    {
         argument->scheduler = scheduler;
+        return (argument);
+    }
     else if(strcmp(scheduler,"edf") == 0)
+    {
         argument->scheduler = scheduler;
+        return (argument);
+    }
     else
         return (NULL);
 }

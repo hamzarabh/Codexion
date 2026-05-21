@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:39:15 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 04:24:01 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 11:15:20 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct coder_t{
     dongle *right;
     dongle *left;
     arg_t *args;
-    pthread_cond_t *wait;
+   // pthread_cond_t *wait;
     pthread_mutex_t last_comp;
     
 }coder_t;
@@ -49,8 +49,8 @@ typedef struct Queue
 {
     coder_t **q;
     int size;
-    int front;
-    int rear;
+  //  int front;
+   // int rear;
     int count;
 }Queue;
 
@@ -67,8 +67,8 @@ typedef struct  arg_t
     char *scheduler;
     long long start;
     int *stop;
-    pthread_mutex_t lock;
-    pthread_cond_t dong_wait;
+    //pthread_mutex_t lock;
+   // pthread_cond_t dong_wait;
     pthread_mutex_t stop_lock;
     pthread_mutex_t *print_lock;
 }arg_t;
@@ -85,5 +85,6 @@ coder_t * dequeue(Queue *q);
 int	check_stop(coder_t *coder, pthread_t *ret);
 long long	give_time(void);
 void	*return_dongles(void *args);
-
+int take_right(coder_t *coder);
+int take_left(coder_t *coder);
 #endif

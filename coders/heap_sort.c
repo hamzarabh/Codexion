@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:38:30 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 03:40:44 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 10:10:18 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ coder_t	**heapify(coder_t **tab, int size, int start)
 coder_t	**heap_sort(coder_t **arr, int size)
 {
 	int	i;
-	int	front;
-	int	rear;
 
 	if (size < 2)
 		return (arr);
