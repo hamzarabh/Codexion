@@ -6,11 +6,9 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:39:05 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 04:38:45 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 12:42:03 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "coders.h"
 
@@ -20,13 +18,13 @@ pthread_t	*create_coders(coder_t **coders)
 	int			i;
 
 	i = 0;
-	threads = malloc(sizeof(pthread_t) *coders[0]->args->number_of_coders);
+	threads = malloc(sizeof(pthread_t) * coders[0]->args->number_of_coders);
 	if (!threads)
-		return NULL;
+		return (NULL);
 	while (i < coders[0]->args->number_of_coders)
 	{
 		if (pthread_create(&threads[i], NULL, simulation, coders[i]) != 0)
-			return NULL;
+			return (NULL);
 		i++;
 	}
 	return (threads);

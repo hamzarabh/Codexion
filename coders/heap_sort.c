@@ -6,10 +6,9 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:38:30 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 10:10:18 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 12:52:40 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "coders.h"
 
@@ -34,17 +33,22 @@ long long	burntime(coder_t *coder)
 
 coder_t	**heapify(coder_t **tab, int size, int start)
 {
-	int	largest;
+	int		largest;
+	int		left;
+	int		right;
 
+	left = start * 2 + 1;
 	if (size == 1)
 		return (tab);
-	while ((start * 2 + 1) < size)
+	while ((left) < size)
 	{
+		left = start * 2 + 1;
+		right = start * 2 + 2;
 		largest = start;
-		if (burntime(tab[start * 2 + 1]) > burntime(tab[start]))
-			largest = start * 2 + 1;
-		if (start * 2 + 2 < size && burntime(tab[start * 2 + 2]) > burntime(tab[largest]))
-			largest = start * 2 + 2;
+		if (burntime(tab[left]) > burntime(tab[start]))
+			largest = left;
+		if (right < size && burntime(tab[right]) > burntime(tab[largest]))
+			largest = right;
 		if (largest != start)
 		{
 			ft_swap(&tab[largest], &tab[start]);

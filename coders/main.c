@@ -6,10 +6,9 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:40:04 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/20 03:40:05 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 13:38:06 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "coders.h"
 
@@ -36,14 +35,14 @@ void	ft_free(coder_t **coders)
 		free(coders[i]);
 		i++;
 	}
-}
+}	
 
 int	main(int argc, char **argv)
 {
 	coder_t	**coders;
 	arg_t	*args;
+	dongle	**dongles;
 
-	dongle * *dongles;
 	args = parsing(argc, argv);
 	if (args == NULL)
 		return (1);
@@ -54,6 +53,5 @@ int	main(int argc, char **argv)
 	ft_free(coders);
 	free(dongles);
 	free(coders);
-	//free(args);
 	return (0);
 }

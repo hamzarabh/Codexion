@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/20 03:39:01 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 11:23:13 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/05/21 13:13:13 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,12 @@ int take_right_then_left(coder_t *coder, int *time1, int *time2)
         pthread_mutex_lock(&coder->right->lock);
         while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
             pthread_cond_wait(&coder->right->wait, &coder->right->lock);
-        if(check_stop(coder, NULL) == 0)
-            return (0);
         pthread_mutex_unlock(&coder->right->lock);
         *time1 = give_time() - coder->args->start;
         pthread_mutex_lock(&coder->left->lock);
         enqueue(coder->left->queue ,coder);
         while(take_left(coder) == 0 && check_stop(coder, NULL) == 1)
             pthread_cond_wait(&coder->left->wait, &coder->left->lock);
-        if(check_stop(coder, NULL) == 0)
-            return (0);
         pthread_mutex_unlock(&coder->left->lock);
         *time2 = give_time() - coder->args->start;
         if(check_stop(coder, NULL) == 0)
@@ -39,16 +35,12 @@ int take_left_then_right(coder_t *coder, int *time1, int *time2)
         pthread_mutex_lock(&coder->left->lock);
         while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
             pthread_cond_wait(&coder->left->wait, &coder->left->lock);
-        if(check_stop(coder, NULL) == 0)
-            return (0);
         pthread_mutex_unlock(&coder->left->lock);
         *time1 = give_time() - coder->args->start;
         pthread_mutex_lock(&coder->right->lock);
         enqueue(coder->right->queue ,coder);
         while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
             pthread_cond_wait(&coder->right->wait, &coder->right->lock);
-        if(check_stop(coder, NULL) == 0)
-            return (0);
         pthread_mutex_unlock(&coder->right->lock);
         *time2 = give_time() - coder->args->start;
         return (1);
