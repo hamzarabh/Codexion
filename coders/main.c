@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 03:40:04 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 13:38:06 by hrabh            ###   ########.fr       */
+/*   Created: 2026/05/22 18:58:34 by hrabh             #+#    #+#             */
+/*   Updated: 2026/05/23 09:22:27 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-void	ft_free(coder_t **coders)
+static void	ft_free(t_coder **coders)
 {
 	int	n_coder;
 	int	i;
@@ -35,19 +35,19 @@ void	ft_free(coder_t **coders)
 		free(coders[i]);
 		i++;
 	}
-}	
+}
 
 int	main(int argc, char **argv)
 {
-	coder_t	**coders;
-	arg_t	*args;
-	dongle	**dongles;
+	t_coder		**coders;
+	t_arg		*args;
+	t_dongle	**dongles;
 
 	args = parsing(argc, argv);
 	if (args == NULL)
 		return (1);
-	coders = malloc(sizeof(coder_t *) * args->number_of_coders);
-	dongles = malloc(sizeof(dongle *) * args->number_of_coders);
+	coders = malloc(sizeof(t_coder *) * args->number_of_coders);
+	dongles = malloc(sizeof(t_dongle *) * args->number_of_coders);
 	init(coders, dongles, args);
 	ft_creator(coders);
 	ft_free(coders);

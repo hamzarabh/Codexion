@@ -5,23 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 03:38:30 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 12:52:40 by hrabh            ###   ########.fr       */
+/*   Created: 2026/05/22 18:58:09 by hrabh             #+#    #+#             */
+/*   Updated: 2026/05/22 18:58:11 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-void	ft_swap(coder_t **n1, coder_t **n2)
+static void	ft_swap(t_coder **n1, t_coder **n2)
 {
-	coder_t	*tmp;
+	t_coder	*tmp;
 
 	tmp = *n1;
 	*n1 = *n2;
 	*n2 = tmp;
 }
 
-long long	burntime(coder_t *coder)
+static long long	burntime(t_coder *coder)
 {
 	long long	time;
 
@@ -31,11 +31,11 @@ long long	burntime(coder_t *coder)
 	return (time);
 }
 
-coder_t	**heapify(coder_t **tab, int size, int start)
+static t_coder	**heapify(t_coder **tab, int size, int start)
 {
-	int		largest;
-	int		left;
-	int		right;
+	int	largest;
+	int	left;
+	int	right;
 
 	left = start * 2 + 1;
 	if (size == 1)
@@ -60,7 +60,7 @@ coder_t	**heapify(coder_t **tab, int size, int start)
 	return (tab);
 }
 
-coder_t	**heap_sort(coder_t **arr, int size)
+t_coder	**heap_sort(t_coder **arr, int size)
 {
 	int	i;
 

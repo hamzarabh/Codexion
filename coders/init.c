@@ -5,27 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 03:38:14 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 13:34:44 by hrabh            ###   ########.fr       */
+/*   Created: 2026/05/22 18:58:19 by hrabh             #+#    #+#             */
+/*   Updated: 2026/05/22 18:58:22 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-static void	init_hlper(coder_t **coders, dongle **dongles, arg_t *args)
+static void	init_hlper(t_coder **coders, t_dongle **dongles, t_arg *args)
 {
 	int	i;
 
 	i = 0;
 	while (i < args->number_of_coders)
 	{
-		dongles[i] = malloc(sizeof(dongle));
-		coders[i] = malloc(sizeof(coder_t));
+		dongles[i] = malloc(sizeof(t_dongle));
+		coders[i] = malloc(sizeof(t_coder));
 		dongles[i]->active = 1;
-		dongles[i]->queue = malloc(sizeof(Queue));
+		dongles[i]->queue = malloc(sizeof(t_queue));
 		dongles[i]->queue->count = 0;
 		dongles[i]->queue->size = 2;
-		dongles[i]->queue->q = malloc(sizeof(coder_t *) * 2);
+		dongles[i]->queue->q = malloc(sizeof(t_coder *) * 2);
 		coders[i]->args = args;
 		coders[i]->id = i + 1;
 		coders[i]->last_compile = args->start;
@@ -39,7 +39,7 @@ static void	init_hlper(coder_t **coders, dongle **dongles, arg_t *args)
 	coders[0]->left = dongles[args->number_of_coders - 1];
 }
 
-void	init(coder_t **coders, dongle **dongles, arg_t *args)
+void	init(t_coder **coders, t_dongle **dongles, t_arg *args)
 {
 	int	i;
 

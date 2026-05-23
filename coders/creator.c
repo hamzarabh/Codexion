@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/20 03:39:05 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 12:42:03 by hrabh            ###   ########.fr       */
+/*   Created: 2026/05/22 18:57:29 by hrabh             #+#    #+#             */
+/*   Updated: 2026/05/22 19:00:49 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-pthread_t	*create_coders(coder_t **coders)
+static pthread_t	*create_coders(t_coder **coders)
 {
 	pthread_t	*threads;
 	int			i;
@@ -30,7 +30,7 @@ pthread_t	*create_coders(coder_t **coders)
 	return (threads);
 }
 
-int	ft_creator(coder_t **coders)
+int	ft_creator(t_coder **coders)
 {
 	int			i;
 	pthread_t	*threads;

@@ -5,23 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 10:10:36 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/21 10:10:37 by hrabh            ###   ########.fr       */
+/*   Created: 2026/05/22 18:59:08 by hrabh             #+#    #+#             */
+/*   Updated: 2026/05/23 09:19:58 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "coders.h"
 
-void	print_log(coder_t *coder, int mode)
+static void	print_log(t_coder *coder, int mode)
 {
+	long long	time;
+
+	time = give_time() - coder->args->start;
 	pthread_mutex_lock(coder->args->print_lock);
 	if (mode == 1)
-		printf("%lld %d is compiling\n", give_time() - coder->args->start, coder->id);
+		printf("%lld %d is compiling\n", time, coder->id);
 	else if (mode == 2)
-		printf("%lld %d is debugging\n", give_time() - coder->args->start, coder->id);
+		printf("%lld %d is debugging\n", time, coder->id);
 	else
-		printf("%lld %d is refactoring\n", give_time() - coder->args->start, coder->id);
+		printf("%lld %d is refactoring\n", time, coder->id);
 	pthread_mutex_unlock(coder->args->print_lock);
 	if (mode == 1)
 		usleep(coder->args->time_to_compile * 1000);
@@ -30,18 +32,18 @@ void	print_log(coder_t *coder, int mode)
 	else if (mode == 3)
 		usleep(coder->args->time_to_refactor * 1000);
 }
+
 void	*simulation(void *arg)
 {
-	coder_t		*coder;
+	t_coder		*coder;
 	pthread_t	ret;
 	int			i;
 
-	i = 0;
-	coder = (coder_t *) arg;
-	while (i < coder->args->number_of_compiles_required)
+	i = -1;
+	coder = (t_coder *) arg;
+	while (++i < coder->args->number_of_compiles_required)
 	{
-		scheduler(coder);
-		if (check_stop(coder, NULL) == 0)
+		if (scheduler(coder) == 0)
 			return (NULL);
 		print_log(coder, 1);
 		if (check_stop(coder, NULL) == 0)
@@ -56,7 +58,6 @@ void	*simulation(void *arg)
 		pthread_join(ret, NULL);
 		if (check_stop(coder, &ret) == 0)
 			return (NULL);
-		i++;
 	}
 	return (NULL);
 }
