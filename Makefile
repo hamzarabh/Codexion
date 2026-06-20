@@ -4,11 +4,11 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 
 CC = cc
 
-SRC = main.c monitor.c init.c heap_sort.c \
-		creator.c parsing.c scheduler.c \
-		simulation.c utils.c queue.c
+SRC = coders/main.c coders/monitor.c coders/init.c coders/heap_sort.c \
+		coders/creator.c coders/parsing.c coders/scheduler.c \
+		coders/simulation.c coders/utils.c coders/queue.c
 
-HEADER = coders.h
+HEADER = coders/coders.h
 
 OBJC = $(SRC:%.c=%.o)
 

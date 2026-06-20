@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:58:43 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/22 18:58:45 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:30:48 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void	monitor_helper(t_coder **coders, int i)
 		pthread_mutex_unlock(&coders[j]->left->lock);
 		j++;
 	}
+	pthread_cond_broadcast(&coders[0]->args->cond_time);
 	usleep(1000);
 	pthread_mutex_lock(coders[i]->args->print_lock);
 	printf("%d ", (int)(give_time() - coders[i]->args->start));
@@ -44,7 +45,7 @@ void	*ft_monitor(void *arg)
 	long long	time;
 
 	coders = (t_coder **) arg;
-	while (check_stop(coders[0], NULL) == 0)
+	while (check_stop(coders[0], NULL) == 1)
 	{
 		i = 0;
 		while (i < coders[0]->args->number_of_coders)

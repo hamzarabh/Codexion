@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:57:55 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/22 18:57:59 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/19 10:59:16 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,7 @@ typedef struct t_dongle
 typedef struct t_coder
 {
 	int				id;
-	int				*stop;
 	long long		last_compile;
-	struct t_coder	*coders;
 	t_dongle		*right;
 	t_dongle		*left;
 	t_arg			*args;
@@ -51,6 +49,12 @@ typedef struct t_queue
 	int		count;
 }	t_queue;
 
+typedef struct t_heap
+{
+	int	left;
+	int	right;
+}	t_heap;
+
 typedef struct t_arg
 {
 	int				number_of_coders;
@@ -64,6 +68,8 @@ typedef struct t_arg
 	long long		start;
 	int				*stop;
 	pthread_mutex_t	stop_lock;
+	pthread_mutex_t	mutex_time;
+	pthread_cond_t	cond_time;
 	pthread_mutex_t	*print_lock;
 }	t_arg;
 
@@ -81,4 +87,5 @@ long long	give_time(void);
 void		*return_dongles(void *args);
 int			take_right(t_coder *coder);
 int			take_left(t_coder *coder);
+void		mysleep(int time, t_coder *coder);
 #endif

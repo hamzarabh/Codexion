@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:58:49 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/23 09:21:14 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/17 22:20:02 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,37 @@ static void	*check_scheduler(t_arg *argument, char *scheduler)
 		return (NULL);
 }
 
+static	int	check_digit(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '+')
+		i++ ;
+	while (str[i] == '0')
+		i++;
+	while (str[i])
+	{
+		if (!(str[i] >= '0' && str[i] <= '9'))
+			return (0);
+		if (strlen(&str[i]) > 10)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 t_arg	*parsing(int argc, char **argv)
 {
 	int		i;
 	t_arg	*argument;
 	int		num;
 
-	if (argc != 9)
-		return (NULL);
 	argument = malloc(sizeof(t_arg));
+	if (!argument)
+		return (NULL);
 	i = 1;
-	while (i < argc - 1 && strlen(argv[i]) < 11)
+	while (i < argc - 1 && check_digit(argv[i]) == 1)
 	{
 		num = atoi(argv[i]);
 		if (num != 0 || i == 7)
@@ -66,10 +86,10 @@ t_arg	*parsing(int argc, char **argv)
 			helper_parsing(argument, i, num);
 		}
 		else
-			return (NULL);
+			return (free(argument), NULL);
 		i++;
 	}
 	if (check_scheduler(argument, argv[i]) == NULL)
-		return (NULL);
+		return (free(argument), NULL);
 	return (argument);
 }

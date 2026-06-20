@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:58:19 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/22 18:58:22 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:22:21 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ static void	init_hlper(t_coder **coders, t_dongle **dongles, t_arg *args)
 		coders[i]->right = dongles[i];
 		if (i != 0)
 			coders[i]->left = dongles[i - 1];
-		coders[i]->last_compile = args->start;
 		pthread_mutex_init(&coders[i]->last_comp, NULL);
 		i++;
 	}
@@ -45,8 +44,12 @@ void	init(t_coder **coders, t_dongle **dongles, t_arg *args)
 
 	args->stop = malloc(sizeof(int));
 	args->print_lock = malloc(sizeof(pthread_mutex_t));
+	if (!args->stop || !args->print_lock)
+		return ;
 	pthread_mutex_init(&args->stop_lock, NULL);
 	pthread_mutex_init(args->print_lock, NULL);
+	pthread_mutex_init(&args->mutex_time, NULL);
+	pthread_cond_init(&args->cond_time, NULL);
 	*args->stop = 1;
 	args->start = give_time();
 	init_hlper(coders, dongles, args);

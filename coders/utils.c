@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:15 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/22 18:59:17 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/07 11:31:33 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	*return_dongles(void *args)
 	t_coder	*coder;
 
 	coder = (t_coder *) args;
-	usleep(coder->args->dongle_cooldown * 1000);
+	mysleep(coder->args->dongle_cooldown, coder);
 	pthread_mutex_lock(&coder->right->lock);
 	coder->right->active = 1;
 	pthread_cond_broadcast(&coder->right->wait);

@@ -6,11 +6,29 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:08 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/23 09:19:58 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:40:08 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
+
+void	mysleep(int time, t_coder *coder)
+{
+	struct timeval	tv;
+	struct timespec	ts;
+	long long		ns;
+
+	gettimeofday(&tv, NULL);
+	ts.tv_sec = tv.tv_sec + (time / 1000);
+	ns = (long long)tv.tv_usec * 1000
+		+ (long long)(time % 1000)*1000000;
+	ts.tv_sec += ns / 1000000000;
+	ts.tv_nsec = ns % 1000000000;
+	pthread_mutex_lock(&coder->args->mutex_time);
+	pthread_cond_timedwait(&coder->args->cond_time,
+		&coder->args->mutex_time, &ts);
+	pthread_mutex_unlock(&coder->args->mutex_time);
+}
 
 static void	print_log(t_coder *coder, int mode)
 {
@@ -26,11 +44,11 @@ static void	print_log(t_coder *coder, int mode)
 		printf("%lld %d is refactoring\n", time, coder->id);
 	pthread_mutex_unlock(coder->args->print_lock);
 	if (mode == 1)
-		usleep(coder->args->time_to_compile * 1000);
+		mysleep(coder->args->time_to_compile, coder);
 	else if (mode == 2)
-		usleep(coder->args->time_to_debug * 1000);
+		mysleep(coder->args->time_to_debug, coder);
 	else if (mode == 3)
-		usleep(coder->args->time_to_refactor * 1000);
+		mysleep(coder->args->time_to_refactor, coder);
 }
 
 void	*simulation(void *arg)
@@ -59,5 +77,5 @@ void	*simulation(void *arg)
 		if (check_stop(coder, &ret) == 0)
 			return (NULL);
 	}
-	return (NULL);
+	return (coder->last_compile = give_time() * 2, NULL);
 }
