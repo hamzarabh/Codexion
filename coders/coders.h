@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:57:55 by hrabh             #+#    #+#             */
-/*   Updated: 2026/06/19 10:59:16 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:59:16 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <time.h>
 
 typedef struct t_arg	t_arg;
 typedef struct t_queue	t_queue;
@@ -26,6 +27,7 @@ typedef struct t_queue	t_queue;
 typedef struct t_dongle
 {
 	int				active;
+	long long		available_at;
 	t_queue			*queue;
 	pthread_mutex_t	lock;
 	pthread_cond_t	wait;
@@ -84,7 +86,7 @@ void		enqueue(t_queue *q, t_coder *coder);
 t_coder		*dequeue(t_queue *q);
 int			check_stop(t_coder *coder, pthread_t *ret);
 long long	give_time(void);
-void		*return_dongles(void *args);
+void		release_dongles(t_coder *coder);
 int			take_right(t_coder *coder);
 int			take_left(t_coder *coder);
 void		mysleep(int time, t_coder *coder);

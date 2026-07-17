@@ -53,9 +53,8 @@ static void	print_log(t_coder *coder, int mode)
 
 void	*simulation(void *arg)
 {
-	t_coder		*coder;
-	pthread_t	ret;
-	int			i;
+	t_coder	*coder;
+	int		i;
 
 	i = -1;
 	coder = (t_coder *) arg;
@@ -66,15 +65,14 @@ void	*simulation(void *arg)
 		print_log(coder, 1);
 		if (check_stop(coder, NULL) == 0)
 			return (NULL);
-		pthread_create(&ret, NULL, return_dongles, coder);
-		if (check_stop(coder, &ret) == 0)
+		release_dongles(coder);
+		if (check_stop(coder, NULL) == 0)
 			return (NULL);
 		print_log(coder, 2);
-		if (check_stop(coder, &ret) == 0)
+		if (check_stop(coder, NULL) == 0)
 			return (NULL);
 		print_log(coder, 3);
-		pthread_join(ret, NULL);
-		if (check_stop(coder, &ret) == 0)
+		if (check_stop(coder, NULL) == 0)
 			return (NULL);
 	}
 	return (coder->last_compile = give_time() * 2, NULL);

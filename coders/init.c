@@ -22,6 +22,7 @@ static void	init_hlper(t_coder **coders, t_dongle **dongles, t_arg *args)
 		dongles[i] = malloc(sizeof(t_dongle));
 		coders[i] = malloc(sizeof(t_coder));
 		dongles[i]->active = 1;
+		dongles[i]->available_at = 0;
 		dongles[i]->queue = malloc(sizeof(t_queue));
 		dongles[i]->queue->count = 0;
 		dongles[i]->queue->size = 2;

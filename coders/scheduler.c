@@ -6,22 +6,42 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:01 by hrabh             #+#    #+#             */
-/*   Updated: 2026/05/23 17:03:01 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:40:08 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
+static void	next_heartbeat(struct timespec *ts)
+{
+	//clock_gettime(CLOCK_REALTIME, ts);
+	clock_gettime(CLOCK_MONOTONIC, ts);
+	ts->tv_nsec += 1000000;
+	if (ts->tv_nsec >= 1000000000)
+	{
+		ts->tv_sec += 1;
+		ts->tv_nsec -= 1000000000;
+	}
+}
+
 static int	take_right_then_left(t_coder *coder)
 {
+	struct timespec	ts;
+
 	pthread_mutex_lock(&coder->right->lock);
 	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
-		pthread_cond_wait(&coder->right->wait, &coder->right->lock);
+	{
+		next_heartbeat(&ts);
+		pthread_cond_timedwait(&coder->right->wait, &coder->right->lock, &ts);
+	}
 	pthread_mutex_unlock(&coder->right->lock);
 	pthread_mutex_lock(&coder->left->lock);
 	enqueue(coder->left->queue, coder);
 	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
-		pthread_cond_wait(&coder->left->wait, &coder->left->lock);
+	{
+		next_heartbeat(&ts);
+		pthread_cond_timedwait(&coder->left->wait, &coder->left->lock, &ts);
+	}
 	pthread_mutex_unlock(&coder->left->lock);
 	if (check_stop(coder, NULL) == 0)
 		return (0);
@@ -30,14 +50,22 @@ static int	take_right_then_left(t_coder *coder)
 
 static int	take_left_then_right(t_coder *coder)
 {
+	struct timespec	ts;
+
 	pthread_mutex_lock(&coder->left->lock);
 	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
-		pthread_cond_wait(&coder->left->wait, &coder->left->lock);
+	{
+		next_heartbeat(&ts);
+		pthread_cond_timedwait(&coder->left->wait, &coder->left->lock, &ts);
+	}
 	pthread_mutex_unlock(&coder->left->lock);
 	pthread_mutex_lock(&coder->right->lock);
 	enqueue(coder->right->queue, coder);
 	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
-		pthread_cond_wait(&coder->right->wait, &coder->right->lock);
+	{
+		next_heartbeat(&ts);
+		pthread_cond_timedwait(&coder->right->wait, &coder->right->lock, &ts);
+	}
 	pthread_mutex_unlock(&coder->right->lock);
 	return (1);
 }

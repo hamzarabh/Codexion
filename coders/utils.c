@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:15 by hrabh             #+#    #+#             */
-/*   Updated: 2026/06/07 11:31:33 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/06/20 20:59:33 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,27 +34,37 @@ int	check_stop(t_coder *coder, pthread_t *ret)
 	return (1);
 }
 
-void	*return_dongles(void *args)
+void	release_dongles(t_coder *coder)
 {
-	t_coder	*coder;
+	long long	now;
 
-	coder = (t_coder *) args;
-	mysleep(coder->args->dongle_cooldown, coder);
+	now = give_time();
 	pthread_mutex_lock(&coder->right->lock);
-	coder->right->active = 1;
+	if (coder->args->dongle_cooldown == 0)
+		coder->right->active = 1;
+	else
+		coder->right->available_at = now + coder->args->dongle_cooldown;
 	pthread_cond_broadcast(&coder->right->wait);
 	pthread_mutex_unlock(&coder->right->lock);
 	pthread_mutex_lock(&coder->left->lock);
-	coder->left->active = 1;
+	if (coder->args->dongle_cooldown == 0)
+		coder->left->active = 1;
+	else
+		coder->left->available_at = now + coder->args->dongle_cooldown;
 	pthread_cond_broadcast(&coder->left->wait);
 	pthread_mutex_unlock(&coder->left->lock);
-	return (NULL);
 }
 
 int	take_right(t_coder *coder)
 {
 	if (strcmp(coder->args->scheduler, "edf") == 0)
 		heap_sort(coder->right->queue->q, coder->right->queue->count);
+	if (coder->right->active == 0 && coder->right->available_at != 0
+		&& give_time() >= coder->right->available_at)
+	{
+		coder->right->active = 1;
+		coder->right->available_at = 0;
+	}
 	if (coder->right->active == 1)
 	{
 		if (coder == coder->right->queue->q[0])
@@ -71,6 +81,12 @@ int	take_left(t_coder *coder)
 {
 	if (strcmp(coder->args->scheduler, "edf") == 0)
 		heap_sort(coder->left->queue->q, coder->left->queue->count);
+	if (coder->left->active == 0 && coder->left->available_at != 0
+		&& give_time() >= coder->left->available_at)
+	{
+		coder->left->active = 1;
+		coder->left->available_at = 0;
+	}
 	if (coder->left->active == 1)
 	{
 		if (coder == coder->left->queue->q[0])
