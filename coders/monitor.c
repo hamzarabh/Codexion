@@ -28,9 +28,11 @@ static void	monitor_helper(t_coder **coders, int i)
 		pthread_mutex_lock(&coders[j]->left->lock);
 		pthread_cond_broadcast(&coders[j]->left->wait);
 		pthread_mutex_unlock(&coders[j]->left->lock);
+		pthread_mutex_lock(&coders[j]->mutex_time);
+		pthread_cond_broadcast(&coders[j]->cond_time);
+		pthread_mutex_unlock(&coders[j]->mutex_time);
 		j++;
 	}
-	pthread_cond_broadcast(&coders[0]->args->cond_time);
 	usleep(1000);
 	pthread_mutex_lock(coders[i]->args->print_lock);
 	printf("%d ", (int)(give_time() - coders[i]->args->start));

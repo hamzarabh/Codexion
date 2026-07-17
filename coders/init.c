@@ -33,6 +33,8 @@ static void	init_hlper(t_coder **coders, t_dongle **dongles, t_arg *args)
 		if (i != 0)
 			coders[i]->left = dongles[i - 1];
 		pthread_mutex_init(&coders[i]->last_comp, NULL);
+		pthread_mutex_init(&coders[i]->mutex_time, NULL);
+		pthread_cond_init(&coders[i]->cond_time, NULL);
 		i++;
 	}
 	coders[0]->left = dongles[args->number_of_coders - 1];
@@ -48,8 +50,7 @@ void	init(t_coder **coders, t_dongle **dongles, t_arg *args)
 		return ;
 	pthread_mutex_init(&args->stop_lock, NULL);
 	pthread_mutex_init(args->print_lock, NULL);
-	pthread_mutex_init(&args->mutex_time, NULL);
-	pthread_cond_init(&args->cond_time, NULL);
+
 	*args->stop = 1;
 	args->start = give_time();
 	init_hlper(coders, dongles, args);

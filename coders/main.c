@@ -21,8 +21,6 @@ static void	ft_free(t_coder **coders)
 	n_coder = coders[0]->args->number_of_coders;
 	pthread_mutex_destroy(&coders[i]->args->stop_lock);
 	pthread_mutex_destroy(coders[i]->args->print_lock);
-	pthread_mutex_init(&coders[i]->args->mutex_time, NULL);
-	pthread_cond_init(&coders[i]->args->cond_time, NULL);
 	free(coders[i]->args->stop);
 	free(coders[i]->args->print_lock);
 	free(coders[i]->args);
@@ -31,6 +29,8 @@ static void	ft_free(t_coder **coders)
 		pthread_mutex_destroy(&coders[i]->right->lock);
 		pthread_cond_destroy(&coders[i]->right->wait);
 		pthread_mutex_destroy(&coders[i]->last_comp);
+		pthread_mutex_destroy(&coders[i]->mutex_time);
+		pthread_cond_destroy(&coders[i]->cond_time);
 		free(coders[i]->right->queue->q);
 		free(coders[i]->right->queue);
 		free(coders[i]->right);

@@ -39,6 +39,8 @@ typedef struct t_coder
 	t_dongle		*left;
 	t_arg			*args;
 	pthread_mutex_t	last_comp;
+	pthread_mutex_t	mutex_time;
+	pthread_cond_t	cond_time;
 
 }	t_coder;
 
@@ -68,8 +70,6 @@ typedef struct t_arg
 	long long		start;
 	int				*stop;
 	pthread_mutex_t	stop_lock;
-	pthread_mutex_t	mutex_time;
-	pthread_cond_t	cond_time;
 	pthread_mutex_t	*print_lock;
 }	t_arg;
 

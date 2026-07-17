@@ -24,10 +24,10 @@ void	mysleep(int time, t_coder *coder)
 		+ (long long)(time % 1000)*1000000;
 	ts.tv_sec += ns / 1000000000;
 	ts.tv_nsec = ns % 1000000000;
-	pthread_mutex_lock(&coder->args->mutex_time);
-	pthread_cond_timedwait(&coder->args->cond_time,
-		&coder->args->mutex_time, &ts);
-	pthread_mutex_unlock(&coder->args->mutex_time);
+	pthread_mutex_lock(&coder->mutex_time);
+	pthread_cond_timedwait(&coder->cond_time,
+		&coder->mutex_time, &ts);
+	pthread_mutex_unlock(&coder->mutex_time);
 }
 
 static void	print_log(t_coder *coder, int mode)
