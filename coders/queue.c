@@ -18,6 +18,7 @@ void	enqueue(t_queue *q, t_coder *coder)
 		return ;
 	q->q[q->count] = coder;
 	q->count++;
+
 }
 
 t_coder	*dequeue(t_queue *q)
@@ -27,10 +28,16 @@ t_coder	*dequeue(t_queue *q)
 	if (q->count == 0)
 		return (NULL);
 	coder = q->q[0];
+	
 	if (q->count > 1)
+	{
 		q->q[0] = q->q[1];
+		q->q[1] = NULL;
+	}
 	else
+	{
 		q->q[0] = NULL;
+	}
 	q->count--;
 	return (coder);
 }

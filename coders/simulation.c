@@ -12,6 +12,27 @@
 
 #include "coders.h"
 
+
+
+void	*return_dongles(void *args)
+{
+	t_coder	*coder;
+
+	coder = (t_coder *) args;
+	usleep(coder->args->dongle_cooldown * 1000);
+	mysleep(coder->args->dongle_cooldown, coder);
+	pthread_mutex_lock(&coder->right->lock);
+	coder->right->active = 1;
+	pthread_cond_broadcast(&coder->right->wait);
+	pthread_mutex_unlock(&coder->right->lock);
+	pthread_mutex_lock(&coder->left->lock);
+	coder->left->active = 1;
+	pthread_cond_broadcast(&coder->left->wait);
+	pthread_mutex_unlock(&coder->left->lock);
+	return (NULL);
+}
+
+
 void	mysleep(int time, t_coder *coder)
 {
 	struct timeval	tv;
@@ -74,6 +95,7 @@ void	*simulation(void *arg)
 		print_log(coder, 3);
 		if (check_stop(coder, NULL) == 0)
 			return (NULL);
+		usleep((coder->args->time_to_compile * 1000));
 	}
 	return (coder->last_compile = give_time() * 2, NULL);
 }
