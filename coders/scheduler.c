@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:01 by hrabh             #+#    #+#             */
-/*   Updated: 2026/06/20 20:40:08 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/07/19 13:43:36 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	scheduler(t_coder *coder)
 {
 	if (coder->id % 2 == 0)
 	{
+		mysleep(2, coder);
 		pthread_mutex_lock(&coder->right->lock);
 		enqueue(coder->right->queue, coder);
 		pthread_mutex_unlock(&coder->right->lock);
