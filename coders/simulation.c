@@ -6,48 +6,26 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:08 by hrabh             #+#    #+#             */
-/*   Updated: 2026/06/20 20:40:08 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/07/19 10:43:10 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-
-
-void	*return_dongles(void *args)
-{
-	t_coder	*coder;
-
-	coder = (t_coder *) args;
-	usleep(coder->args->dongle_cooldown * 1000);
-	mysleep(coder->args->dongle_cooldown, coder);
-	pthread_mutex_lock(&coder->right->lock);
-	coder->right->active = 1;
-	pthread_cond_broadcast(&coder->right->wait);
-	pthread_mutex_unlock(&coder->right->lock);
-	pthread_mutex_lock(&coder->left->lock);
-	coder->left->active = 1;
-	pthread_cond_broadcast(&coder->left->wait);
-	pthread_mutex_unlock(&coder->left->lock);
-	return (NULL);
-}
-
-
 void	mysleep(int time, t_coder *coder)
 {
-	struct timeval	tv;
 	struct timespec	ts;
-	long long		ns;
 
-	gettimeofday(&tv, NULL);
-	ts.tv_sec = tv.tv_sec + (time / 1000);
-	ns = (long long)tv.tv_usec * 1000
-		+ (long long)(time % 1000)*1000000;
-	ts.tv_sec += ns / 1000000000;
-	ts.tv_nsec = ns % 1000000000;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	ts.tv_sec += time / 1000;
+	ts.tv_nsec += (time % 1000) * 1000000L;
+	if (ts.tv_nsec >= 1000000000L)
+	{
+		ts.tv_sec++;
+		ts.tv_nsec -= 1000000000L;
+	}
 	pthread_mutex_lock(&coder->mutex_time);
-	pthread_cond_timedwait(&coder->cond_time,
-		&coder->mutex_time, &ts);
+	pthread_cond_timedwait(&coder->cond_time, &coder->mutex_time, &ts);
 	pthread_mutex_unlock(&coder->mutex_time);
 }
 
@@ -74,11 +52,11 @@ static void	print_log(t_coder *coder, int mode)
 
 void	*simulation(void *arg)
 {
-	t_coder	*coder;
-	int		i;
+	t_coder		*coder;
+	int			i;
 
 	i = -1;
-	coder = (t_coder *) arg;
+	coder = (t_coder *)arg;
 	while (++i < coder->args->number_of_compiles_required)
 	{
 		if (scheduler(coder) == 0)

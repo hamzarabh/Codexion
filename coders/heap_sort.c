@@ -38,7 +38,8 @@ int	ft_helper(int *start, t_heap *args, t_coder **tab, int size)
 	largest = *start;
 	if (args->left < size && burntime(tab[args->left]) > burntime(tab[*start]))
 		largest = args->left;
-	else if (args->left < size && burntime(tab[args->left]) == burntime(tab[*start]))
+	else if (args->left < size
+		&& burntime(tab[args->left]) == burntime(tab[*start]))
 		if (tab[args->left]->id > tab[*start]->id)
 			largest = args->left;
 	if (args->right < size

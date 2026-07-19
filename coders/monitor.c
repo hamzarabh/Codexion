@@ -46,7 +46,7 @@ void	*ft_monitor(void *arg)
 	int			i;
 	long long	time;
 
-	coders = (t_coder **) arg;
+	coders = (t_coder **)arg;
 	while (check_stop(coders[0], NULL) == 1)
 	{
 		i = 0;

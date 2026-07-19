@@ -51,7 +51,6 @@ void	init(t_coder **coders, t_dongle **dongles, t_arg *args)
 		return ;
 	pthread_mutex_init(&args->stop_lock, NULL);
 	pthread_mutex_init(args->print_lock, NULL);
-
 	*args->stop = 1;
 	args->start = give_time();
 	init_hlper(coders, dongles, args);

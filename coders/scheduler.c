@@ -12,36 +12,16 @@
 
 #include "coders.h"
 
-static void next_available(struct timespec *ts, long long available_at)
-{
-    ts->tv_sec = available_at / 1000;
-    ts->tv_nsec = (available_at % 1000) * 1000000;
-}
-
 static int	take_right_then_left(t_coder *coder)
 {
-	struct timespec	ts;
-
 	pthread_mutex_lock(&coder->right->lock);
-	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1 )
-	{
-		next_available(&ts, coder->right->available_at);
-		if (coder->right->available_at != 0)
-			pthread_cond_timedwait(&coder->right->wait, &coder->right->lock, &ts);
-		else 
-			pthread_cond_wait(&coder->right->wait, &coder->right->lock);
-	}
+	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
+		wait_dongle(coder->right);
 	pthread_mutex_unlock(&coder->right->lock);
 	pthread_mutex_lock(&coder->left->lock);
 	enqueue(coder->left->queue, coder);
-	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1 )
-	{
-		 next_available(&ts, coder->left->available_at);
-		if (coder->left->available_at != 0)
-			pthread_cond_timedwait(&coder->left->wait, &coder->left->lock, &ts);
-		else
-			pthread_cond_wait(&coder->left->wait, &coder->left->lock);
-	}
+	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
+		wait_dongle(coder->left);
 	pthread_mutex_unlock(&coder->left->lock);
 	if (check_stop(coder, NULL) == 0)
 		return (0);
@@ -50,29 +30,14 @@ static int	take_right_then_left(t_coder *coder)
 
 static int	take_left_then_right(t_coder *coder)
 {
-	struct timespec	ts;
-
 	pthread_mutex_lock(&coder->left->lock);
 	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
-	{
-		
-		next_available(&ts, coder->left->available_at);
-		if (coder->left->available_at != 0)
-		pthread_cond_timedwait(&coder->left->wait, &coder->left->lock, &ts);
-		else
-		pthread_cond_wait(&coder->left->wait, &coder->left->lock);
-	}
+		wait_dongle(coder->left);
 	pthread_mutex_unlock(&coder->left->lock);
 	pthread_mutex_lock(&coder->right->lock);
 	enqueue(coder->right->queue, coder);
 	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
-	{
-		 next_available(&ts, coder->right->available_at);
-		if (coder->right->available_at != 0)
-			pthread_cond_timedwait(&coder->right->wait, &coder->right->lock, &ts);
-		else
-			pthread_cond_wait(&coder->right->wait, &coder->right->lock);
-	}
+		wait_dongle(coder->right);
 	pthread_mutex_unlock(&coder->right->lock);
 	return (1);
 }
@@ -102,7 +67,7 @@ static void	helper_scheduler(t_coder *coder)
 	coder->last_compile = give_time();
 	pthread_mutex_unlock(&coder->last_comp);
 	pthread_mutex_lock(coder->args->print_lock);
-	time = give_time() - coder->args->start ;
+	time = give_time() - coder->args->start;
 	printf("%lld %d has taken a dongle\n", time, coder->id);
 	printf("%lld %d has taken a dongle\n", time, coder->id);
 	pthread_mutex_unlock(coder->args->print_lock);

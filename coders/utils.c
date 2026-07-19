@@ -34,42 +34,38 @@ int	check_stop(t_coder *coder, pthread_t *ret)
 	return (1);
 }
 
-void release_dongles(t_coder *coder)
+void	release_dongles(t_coder *coder)
 {
-    long long now;
+	long long	now;
 
-    now = give_time();
-
-    pthread_mutex_lock(&coder->right->lock);
-    if (coder->args->dongle_cooldown == 0)
-        coder->right->active = 1;
-    else
-        coder->right->available_at = now + coder->args->dongle_cooldown;
-    pthread_cond_broadcast(&coder->right->wait);
-    pthread_mutex_unlock(&coder->right->lock);
-
-    pthread_mutex_lock(&coder->left->lock);
-    if (coder->args->dongle_cooldown == 0)
-        coder->left->active = 1;
-    else
-        coder->left->available_at = now + coder->args->dongle_cooldown;
-    pthread_cond_broadcast(&coder->left->wait);
-    pthread_mutex_unlock(&coder->left->lock);
+	now = give_time();
+	pthread_mutex_lock(&coder->right->lock);
+	if (coder->args->dongle_cooldown == 0)
+		coder->right->active = 1;
+	else
+		coder->right->available_at = now + coder->args->dongle_cooldown;
+	pthread_cond_broadcast(&coder->right->wait);
+	pthread_mutex_unlock(&coder->right->lock);
+	pthread_mutex_lock(&coder->left->lock);
+	if (coder->args->dongle_cooldown == 0)
+		coder->left->active = 1;
+	else
+		coder->left->available_at = now + coder->args->dongle_cooldown;
+	pthread_cond_broadcast(&coder->left->wait);
+	pthread_mutex_unlock(&coder->left->lock);
 }
 
 int	take_right(t_coder *coder)
 {
 	if (strcmp(coder->args->scheduler, "edf") == 0)
 		heap_sort(coder->right->queue->q, coder->right->queue->count);
-	if (coder->right->queue->count > 0
-    && coder->right->queue->q[0] == coder
-    && coder->right->active == 0
-    && coder->right->available_at != 0
-    && give_time() >= coder->right->available_at)
-{
-    coder->right->active = 1;
-    coder->right->available_at = 0;
-}
+	if (coder->right->queue->count > 0 && coder->right->queue->q[0] == coder
+		&& coder->right->active == 0 && coder->right->available_at != 0
+		&& give_time() >= coder->right->available_at)
+	{
+		coder->right->active = 1;
+		coder->right->available_at = 0;
+	}
 	if (coder->right->active == 1)
 	{
 		if (coder == coder->right->queue->q[0])
@@ -86,15 +82,13 @@ int	take_left(t_coder *coder)
 {
 	if (strcmp(coder->args->scheduler, "edf") == 0)
 		heap_sort(coder->left->queue->q, coder->left->queue->count);
-	if (coder->left->queue->count > 0
-    && coder->left->queue->q[0] == coder
-    && coder->left->active == 0
-    && coder->left->available_at != 0
-    && give_time() >= coder->left->available_at)
-{
-    coder->left->active = 1;
-    coder->left->available_at = 0;
-}
+	if (coder->left->queue->count > 0 && coder->left->queue->q[0] == coder
+		&& coder->left->active == 0 && coder->left->available_at != 0
+		&& give_time() >= coder->left->available_at)
+	{
+		coder->left->active = 1;
+		coder->left->available_at = 0;
+	}
 	if (coder->left->active == 1)
 	{
 		if (coder == coder->left->queue->q[0])
@@ -106,5 +100,3 @@ int	take_left(t_coder *coder)
 	}
 	return (0);
 }
-
-

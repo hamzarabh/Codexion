@@ -1,41 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   queue.c                                            :+:      :+:    :+:   */
+/*   scheduler_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/22 18:58:55 by hrabh             #+#    #+#             */
-/*   Updated: 2026/07/19 10:44:07 by hrabh            ###   ########.fr       */
+/*   Created: 2026/07/19 10:41:43 by hrabh             #+#    #+#             */
+/*   Updated: 2026/07/19 10:44:30 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
-void	enqueue(t_queue *q, t_coder *coder)
+void	next_available(struct timespec *ts, long long available_at)
 {
-	if (q->count == q->size)
-		return ;
-	q->q[q->count] = coder;
-	q->count++;
+	ts->tv_sec = available_at / 1000;
+	ts->tv_nsec = (available_at % 1000) * 1000000;
 }
 
-t_coder	*dequeue(t_queue *q)
+void	wait_dongle(t_dongle *dongle)
 {
-	t_coder		*coder;
+	struct timespec	ts;
 
-	if (q->count == 0)
-		return (NULL);
-	coder = q->q[0];
-	if (q->count > 1)
+	if (dongle->available_at != 0)
 	{
-		q->q[0] = q->q[1];
-		q->q[1] = NULL;
+		next_available(&ts, dongle->available_at);
+		pthread_cond_timedwait(&dongle->wait, &dongle->lock, &ts);
 	}
 	else
-	{
-		q->q[0] = NULL;
-	}
-	q->count--;
-	return (coder);
+		pthread_cond_wait(&dongle->wait, &dongle->lock);
 }

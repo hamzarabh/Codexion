@@ -6,7 +6,7 @@ CC = cc
 
 SRC = coders/main.c coders/monitor.c coders/init.c coders/heap_sort.c \
 		coders/creator.c coders/parsing.c coders/scheduler.c \
-		coders/simulation.c coders/utils.c coders/queue.c
+		coders/simulation.c coders/utils.c coders/queue.c coders/scheduler_utils.c
 
 HEADER = coders/coders.h
 
