@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:59:08 by hrabh             #+#    #+#             */
-/*   Updated: 2026/07/19 13:31:26 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/07/19 18:34:40 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,8 @@ void	*simulation(void *arg)
 		print_log(coder, 3);
 		if (check_stop(coder, NULL) == 0)
 			return (NULL);
-		 if (coder->args->number_of_coders % 2  == 1)
+		if (coder->args->number_of_coders % 2 == 1)
 			usleep((coder->args->time_to_compile * 1000));
-		// if (coder->args->number_of_coders % 2 == 1)
-    	// 	usleep(coder->args->dongle_cooldown * 1000);      // 1ms
 	}
 	return (coder->last_compile = give_time() * 2, NULL);
 }

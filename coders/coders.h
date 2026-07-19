@@ -6,7 +6,7 @@
 /*   By: hrabh <hrabh@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/22 18:57:55 by hrabh             #+#    #+#             */
-/*   Updated: 2026/07/19 10:45:31 by hrabh            ###   ########.fr       */
+/*   Updated: 2026/07/19 18:52:49 by hrabh            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
-// # include <time.h>
+# include <time.h>
 
 typedef struct t_arg	t_arg;
 typedef struct t_queue	t_queue;
