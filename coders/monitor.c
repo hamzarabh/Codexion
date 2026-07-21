@@ -47,7 +47,7 @@ void	*ft_monitor(void *arg)
 	long long	time;
 
 	coders = (t_coder **)arg;
-	while (check_stop(coders[0], NULL) == 1)
+	while (check_stop(coders[0]) == 1)
 	{
 		i = 0;
 		while (i < coders[0]->args->number_of_coders)
@@ -60,9 +60,10 @@ void	*ft_monitor(void *arg)
 				monitor_helper(coders, i);
 				return (NULL);
 			}
-			if (check_stop(coders[0], NULL) == 0)
+			if (check_stop(coders[0]) == 0)
 				return (0);
 			i++;
+			usleep(800);
 		}
 	}
 	return (NULL);

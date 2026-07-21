@@ -50,10 +50,21 @@ static void	print_log(t_coder *coder, int mode)
 		mysleep(coder->args->time_to_refactor, coder);
 }
 
+static void	odd_delay(t_coder *coder)
+{
+	if (coder->args->number_of_coders % 2 == 0)
+		return ;
+	if (coder->args->time_to_compile + coder->args->time_to_debug
+		+ coder->args->time_to_refactor <= coder->args->dongle_cooldown)
+		usleep(coder->args->dongle_cooldown * 2000);
+	else
+		usleep(coder->args->time_to_compile * 1000);
+}
+
 void	*simulation(void *arg)
 {
-	t_coder		*coder;
-	int			i;
+	t_coder	*coder;
+	int		i;
 
 	i = -1;
 	coder = (t_coder *)arg;
@@ -62,19 +73,19 @@ void	*simulation(void *arg)
 		if (scheduler(coder) == 0)
 			return (NULL);
 		print_log(coder, 1);
-		if (check_stop(coder, NULL) == 0)
+		if (check_stop(coder) == 0)
 			return (NULL);
 		release_dongles(coder);
-		if (check_stop(coder, NULL) == 0)
+		if (check_stop(coder) == 0)
 			return (NULL);
 		print_log(coder, 2);
-		if (check_stop(coder, NULL) == 0)
+		if (check_stop(coder) == 0)
 			return (NULL);
 		print_log(coder, 3);
-		if (check_stop(coder, NULL) == 0)
+		if (check_stop(coder) == 0)
 			return (NULL);
-		if (coder->args->number_of_coders % 2 == 1)
-			usleep((coder->args->time_to_compile * 1000));
+		if (i < coder->args->number_of_compiles_required - 1)
+			odd_delay(coder);
 	}
 	return (coder->last_compile = give_time() * 2, NULL);
 }

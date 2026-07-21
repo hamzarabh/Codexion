@@ -15,15 +15,15 @@
 static int	take_right_then_left(t_coder *coder)
 {
 	pthread_mutex_lock(&coder->right->lock);
-	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
+	while (take_right(coder) == 0 && check_stop(coder) == 1)
 		wait_dongle(coder->right);
 	pthread_mutex_unlock(&coder->right->lock);
 	pthread_mutex_lock(&coder->left->lock);
 	enqueue(coder->left->queue, coder);
-	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
+	while (take_left(coder) == 0 && check_stop(coder) == 1)
 		wait_dongle(coder->left);
 	pthread_mutex_unlock(&coder->left->lock);
-	if (check_stop(coder, NULL) == 0)
+	if (check_stop(coder) == 0)
 		return (0);
 	return (1);
 }
@@ -31,12 +31,12 @@ static int	take_right_then_left(t_coder *coder)
 static int	take_left_then_right(t_coder *coder)
 {
 	pthread_mutex_lock(&coder->left->lock);
-	while (take_left(coder) == 0 && check_stop(coder, NULL) == 1)
+	while (take_left(coder) == 0 && check_stop(coder) == 1)
 		wait_dongle(coder->left);
 	pthread_mutex_unlock(&coder->left->lock);
 	pthread_mutex_lock(&coder->right->lock);
 	enqueue(coder->right->queue, coder);
-	while (take_right(coder) == 0 && check_stop(coder, NULL) == 1)
+	while (take_right(coder) == 0 && check_stop(coder) == 1)
 		wait_dongle(coder->right);
 	pthread_mutex_unlock(&coder->right->lock);
 	return (1);
@@ -54,7 +54,7 @@ static int	take_dongles(t_coder *coder)
 		if (take_left_then_right(coder) == 0)
 			return (0);
 	}
-	if (check_stop(coder, NULL) == 0)
+	if (check_stop(coder) == 0)
 		return (0);
 	return (1);
 }
@@ -91,7 +91,7 @@ int	scheduler(t_coder *coder)
 	if (take_dongles(coder) == 0)
 		return (0);
 	helper_scheduler(coder);
-	if (check_stop(coder, NULL) == 0)
+	if (check_stop(coder) == 0)
 		return (0);
 	return (1);
 }

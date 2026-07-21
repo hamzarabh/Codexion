@@ -84,7 +84,7 @@ void					init(t_coder **coders, t_dongle **dongles, t_arg *args);
 int						scheduler(t_coder *coder);
 void					enqueue(t_queue *q, t_coder *coder);
 t_coder					*dequeue(t_queue *q);
-int						check_stop(t_coder *coder, pthread_t *ret);
+int						check_stop(t_coder *coder);
 long long				give_time(void);
 void					release_dongles(t_coder *coder);
 int						take_right(t_coder *coder);

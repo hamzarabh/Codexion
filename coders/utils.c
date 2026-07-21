@@ -20,14 +20,12 @@ long long	give_time(void)
 	return ((now.tv_sec * 1000LL) + (now.tv_usec / 1000));
 }
 
-int	check_stop(t_coder *coder, pthread_t *ret)
+int	check_stop(t_coder *coder)
 {
 	pthread_mutex_lock(&coder->args->stop_lock);
 	if (*coder->args->stop == 0)
 	{
 		pthread_mutex_unlock(&coder->args->stop_lock);
-		if (ret != NULL)
-			pthread_join(*ret, NULL);
 		return (0);
 	}
 	pthread_mutex_unlock(&coder->args->stop_lock);
